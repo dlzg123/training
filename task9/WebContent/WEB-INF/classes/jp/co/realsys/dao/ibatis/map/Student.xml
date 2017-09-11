@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap
+PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN"
+"http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="Student">
+	<typeAlias alias="student" type="jp.co.realsys.model.StudentModel" />
+	<select id="getStudent" parameterClass="java.lang.String"
+		resultClass="student">
+		<![CDATA[
+			select id from student where id=#id#
+		]]>
+	</select>
+	<insert id="saveStudent" parameterClass="student">
+		<![CDATA[
+			insert into student values(#id#,#name#,#birthDate#,#address#)
+		]]>
+	</insert>
+	<update id="updateStudent" parameterClass="student">
+		<![CDATA[
+			update student set name = #name#,birthdate = #birthDate#,address = #address# where id=#id#
+		]]>
+	</update>
+	<select id="getStudentByName" parameterClass="java.lang.String"
+		resultClass="student">
+		<![CDATA[
+			select * from student where name=#name#
+		]]>
+	</select>
+	<select id="getStudentById" parameterClass="java.lang.String"
+		resultClass="student">
+		<![CDATA[
+			select * from student where id=#id#
+		]]>
+	</select>
+	<delete id="delete" parameterClass="java.lang.String">
+		<![CDATA[
+			delete from student where id=#id# 
+		]]>
+	</delete>
+</sqlMap>
+
+

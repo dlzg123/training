@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts-config PUBLIC
+  "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN"
+  "http://struts.apache.org/dtds/struts-config_1_2.dtd">
+<struts-config>
+  <form-beans>
+    <form-bean name="springLoginForm" type="jp.co.realsys.view.spring.form.LoginForm" />
+    <form-bean name="springAddForm" type="jp.co.realsys.view.spring.form.AddForm" />
+    <form-bean name="springDeleteForm" type="jp.co.realsys.view.spring.form.DeleteForm" />
+    <form-bean name="springQueryForm" type="jp.co.realsys.view.spring.form.QueryForm" />
+    <form-bean name="springQueryByIdForm" type="jp.co.realsys.view.spring.form.QueryByIdForm" />
+    <form-bean name="springUpdateForm" type="jp.co.realsys.view.spring.form.UpdateForm" />
+  </form-beans>
+
+  <action-mappings>
+     <action        
+            path="/jsp/spring/queryById"
+            type="org.springframework.web.struts.DelegatingActionProxy"
+            name="springQueryByIdForm"        
+            scope="request" 
+            validate="true" 
+            input="/jsp/spring/update.jsp">
+            <forward name="updateView" path="/jsp/spring/updateView.jsp" />
+            <forward name="mainMenu"  path="/jsp/spring/mainMenu.jsp" />
+       </action>
+       <action 
+           path="/jsp/spring/login" 
+           type="org.springframework.web.struts.DelegatingActionProxy" 
+           name="springLoginForm" 
+           scope="request" 
+           validate="true" 
+           input="/jsp/spring/login.jsp">
+           <forward name="mainMenu"  path="/jsp/spring/mainMenu.jsp" />
+       </action>
+       <action 
+           path="/jsp/spring/add" 
+           type="org.springframework.web.struts.DelegatingActionProxy"
+           name="springAddForm" 
+           scope="request" 
+           validate="true" 
+           input="/jsp/spring/addStu.jsp"> 
+           <forward name="success"  path="/jsp/spring/success.jsp" />
+           <forward name="mainMenu"  path="/jsp/spring/mainMenu.jsp" />
+       </action>
+     <action
+       path="/jsp/spring/delete"
+       type="org.springframework.web.struts.DelegatingActionProxy"
+       name="springDeleteForm"        
+       scope="request" 
+       validate="true" 
+       input="/jsp/spring/delete.jsp">
+        <forward name="success"  path="/jsp/spring/success.jsp" />
+        <forward name="mainMenu"  path="/jsp/spring/mainMenu.jsp" />
+     </action>
+     <action
+        path="/jsp/spring/query"
+        type="org.springframework.web.struts.DelegatingActionProxy"
+        name="springQueryForm"
+        scope="request" 
+        validate="true" 
+        input="/jsp/spring/query.jsp">
+        <forward name="view" path="/jsp/spring/view.jsp" />
+        <forward name="mainMenu"  path="/jsp/spring/mainMenu.jsp" />
+     </action>
+     <action
+        path="/jsp/spring/update"
+        type="org.springframework.web.struts.DelegatingActionProxy"
+        name="springUpdateForm"
+        scope="request" 
+        validate="true" 
+        input="/jsp/spring/updateView.jsp">
+        <forward name="success"  path="/jsp/spring/success.jsp" />
+        <forward name="mainMenu"  path="/jsp/spring/mainMenu.jsp" />
+     </action>
+  </action-mappings>
+  
+  <message-resources parameter="MessageResources" /> 
+  <plug-in className="org.springframework.web.struts.ContextLoaderPlugIn">
+        <set-property property="contextConfigLocation"
+            value="/WEB-INF/applicationContext.xml"/>
+  </plug-in>
+  <plug-in className="org.apache.struts.validator.ValidatorPlugIn">
+  	<set-property property="pathnames" value="/WEB-INF/validator-rules.xml,/WEB-INF/validation.xml"/>
+  </plug-in>
+</struts-config>

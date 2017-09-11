@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap
+PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN"
+"http://www.ibatis.com/dtd/sql-map-2.dtd">
+<sqlMap namespace="User">
+	<!--模块配置-->
+	<typeAlias alias="user" type="jp.co.realsys.model.UserModel" />
+	<cacheModel id="userCache" type="LRU">
+		<flushInterval hours="24" />
+		<flushOnExecute statement="getUser" />
+		<property name="size" value="1000" />
+	</cacheModel>
+	<select id="getUser" parameterClass="user" resultClass="user"
+		cacheModel="userCache">
+		<![CDATA[
+		select userId,password from usersinfo where userId = #userId# and password= #password#     
+		]]>
+	</select>
+</sqlMap>

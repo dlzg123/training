@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+"http://www.springframework.org/dtd/spring-beans.dtd">
+<beans>
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+		<property name="driverClassName">
+			<value>oracle.jdbc.driver.OracleDriver</value>
+		</property>
+		<property name="url">
+			<value>jdbc:oracle:thin:@10.100.192.47:1521:DBUTF8</value>
+		</property>
+		<property name="username">
+			<value>TASK</value>
+		</property>
+		<property name="password">
+			<value>TASK</value>
+		</property>
+	</bean>
+	
+	<bean id="sqlMapClient"
+		class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+		<property name="configLocation">
+			<value>classpath:jp/co/realsys/dao/ibatis/map/sqlMapConfig.xml</value>
+		</property>
+		<property name="dataSource">
+			<ref local="dataSource"/>
+		</property>
+	</bean>
+	
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource">
+			<ref local="dataSource"/>
+		</property>
+	</bean>
+	
+	<bean id="userDAO" class="jp.co.realsys.dao.ibatis.UserIbatisDaoImpl">
+		
+		<property name="sqlMapClient">
+			<ref local="sqlMapClient"/>
+		</property>
+	</bean>
+	
+	<bean id="studentDAO" class="jp.co.realsys.dao.ibatis.StudentIbatisDaoImpl">
+		<property name="sqlMapClient">
+			<ref local="sqlMapClient"/>
+		</property>
+	</bean>
+	
+	<bean id="userDAOProxy"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager">
+			<ref bean="transactionManager"/>
+		</property>
+		<property name="target">
+			<ref local="userDAO"/>
+		</property>
+		<property name="transactionAttributes">
+			<props>
+				<prop key="insert*">PROPAGATION_REQUIRED</prop>
+				<prop key="get*">PROPAGATION_REQUIRED,readOnly</prop>
+				<prop key="is*">PROPAGATION_REQUIRED,readOnly</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<bean id="studentDAOProxy"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager">
+			<ref bean="transactionManager"/>
+		</property>
+		<property name="target">
+			<ref local="studentDAO"/>
+		</property>
+		<property name="transactionAttributes">
+			<props>
+				<prop key="insert*">PROPAGATION_REQUIRED</prop>
+				<prop key="delete*">PROPAGATION_REQUIRED</prop>
+				<prop key="update*">PROPAGATION_REQUIRED</prop>
+				<prop key="get*">PROPAGATION_REQUIRED,readOnly</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<bean name="/jsp/spring/login" class="jp.co.realsys.view.spring.action.LoginAction" singleton="false">
+		<property name="userDao">
+			<ref bean="userDAOProxy"/>
+		</property>
+	</bean>
+	<bean name="/jsp/spring/add" class="jp.co.realsys.view.spring.action.AddAction" singleton="false">
+		<property name="studentDao">
+			<ref bean="studentDAOProxy"/>
+		</property>
+	</bean>
+	<bean name="/jsp/spring/queryById" class="jp.co.realsys.view.spring.action.QueryByIdAction" singleton="false">
+		<property name="studentDao">
+			<ref bean="studentDAOProxy"/>
+		</property>
+	</bean>
+	<bean name="/jsp/spring/update" class="jp.co.realsys.view.spring.action.UpdateAction" singleton="false">
+		<property name="studentDao">
+			<ref bean="studentDAOProxy"/>
+		</property>
+	</bean>
+	<bean name="/jsp/spring/delete" class="jp.co.realsys.view.spring.action.DeleteAction" singleton="false">
+		<property name="studentDao">
+			<ref bean="studentDAOProxy"/>
+		</property>
+	</bean>
+	<bean name="/jsp/spring/query" class="jp.co.realsys.view.spring.action.QueryAction" singleton="false">
+		<property name="studentDao">
+			<ref bean="studentDAOProxy"/>
+		</property>
+	</bean>
+</beans>
